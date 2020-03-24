@@ -1,0 +1,35 @@
+#利用pandas库 能够很好地查看一个csv文件中的情况。
+#在二手车联系中
+Train_data.info()
+#能够查看查看数据列名以及相关缺失情况
+Train_data.columns
+#查看具体的列名
+Train_data.describe()
+#利用这个 可以查看文档中统计数据， count和 mean,std还是蛮有用的
+numerical_cols = Train_data.select_dtypes(exclude = 'object').columns
+#提取数值型特征名
+#对于pandas的select_dtypes是选择类型的数据 include是选择，exclude是排除
+#详情见：https://blog.csdn.net/qq_37277944/article/details/82985167#%E5%9B%9Bselect_dtypes%EF%BC%9A
+## 选择特征列
+feature_cols = [col for col in numerical_cols if col not in ['SaleID','name','regDate','creatDate','price','model','brand','regionCode','seller']]
+feature_cols = [col for col in feature_cols if 'Type' not in col]
+
+## 提前特征列，标签列构造训练样本和测试样本
+X_data = Train_data[feature_cols]
+Y_data = Train_data['price']
+
+X_test  = TestA_data[feature_cols]
+## 对于这些理解 就是选取相应的数数值数据特征 然后进行样本的选择，通俗而言就是 前面的步骤是样本的清洗
+## 定义了一个统计函数，方便后续信息统计
+def Sta_inf(data):
+    print('_min',np.min(data))
+    print('_max:',np.max(data))
+    print('_mean',np.mean(data))
+    print('_ptp',np.ptp(data))
+    print('_std',np.std(data))
+    print('_var',np.var(data))
+  ## 这样的统计函数 很有必要，在以后的学习生活中，对数据处理需要看看它的统计情况
+  X_data = X_data.fillna(-1)
+X_test = X_test.fillna(-1)
+##对缺省值 用-1处理，让数据准备更完整
+# 这样对数据的前期准备有了初步探索
